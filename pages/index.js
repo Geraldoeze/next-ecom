@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb';
 import { useState } from 'react';
-
-
+import Layout from '../components/Layout';
+import Product from '../components/Products';
 
 function Homepage({products}) {
   const [phrase, setPhrase] = useState("");
@@ -16,7 +16,35 @@ function Homepage({products}) {
     } 
 
   return (
-    <h1>ERRORS</h1>
+    <Layout>
+      <input
+        value={phrase}
+        onChange={(e) => setPhrase(e.target.value)}
+        type="text"
+        placeholder="Search for products..."
+        className="bg-gray-200 w-full py-2 px-4 rounded-xl"
+      />
+      <div>
+        {categoryNamies.map((categoryName) => (
+          <div key={categoryName}>
+            {products.find((p) => p.category === categoryName) && (
+              <div>
+                <h2 className="text-2xl py-5 capitalize">{categoryName}</h2>
+                <div className="flex -mx-5 overflow-x-scroll snap-x scrollbar-hide">
+                  {products
+                    .filter((p) => p.category === categoryName)
+                    .map((productInfo) => (
+                      <div key={productInfo._id} className="px-5 snap-start">
+                        <Product {...productInfo} />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </Layout>
   );
 }
 
